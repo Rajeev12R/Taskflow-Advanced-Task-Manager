@@ -518,6 +518,9 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeTaskFilters();
     initializeTaskModal();
     initializeTaskActions();
+    initializeImportForm();
+    updateTaskCardLayout();
+    updateModalResponsiveness();
 
     // Add data-task-id to all task cards if not already present
     document.querySelectorAll('.task-card').forEach(card => {
@@ -549,4 +552,104 @@ function showTaskDetails(event) {
     dueDate.textContent = event.start.toLocaleDateString();
 
     modal.classList.remove('hidden');
-} 
+}
+
+// Import Modal Functions
+function openImportModal() {
+    const modal = document.getElementById('importModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modal && modalOverlay) {
+        modal.classList.remove('hidden');
+        modalOverlay.classList.remove('hidden');
+    }
+}
+
+function closeImportModal() {
+    const modal = document.getElementById('importModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modal && modalOverlay) {
+        modal.classList.add('hidden');
+        modalOverlay.classList.add('hidden');
+        // Reset form
+        const form = document.getElementById('importForm');
+        if (form) form.reset();
+    }
+}
+
+// Initialize Import Form
+function initializeImportForm() {
+    const form = document.getElementById('importForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const fileInput = this.querySelector('input[type="file"]');
+
+        if (!fileInput.files.length) {
+            showToast('Please select a file to import', 'error');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            showToast('File size must be less than 5MB', 'error');
+            return;
+        }
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Importing...';
+
+        fetch('import_tasks.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    closeImportModal();
+                    // Delay reload to show the success toast
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || 'Import failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast(error.message || 'Failed to import tasks', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            });
+    });
+}
+
+// Add to DOM loaded initialization
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Initializing TaskFlow...');
+
+    // Initialize all features
+    initializeSidebar();
+    initializeTaskFilters();
+    initializeTaskModal();
+    initializeTaskActions();
+    initializeImportForm();
+    updateTaskCardLayout();
+    updateModalResponsiveness();
+
+    // ... rest of the initialization code ...
+}); 
