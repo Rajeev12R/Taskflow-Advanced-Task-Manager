@@ -61,7 +61,7 @@ if($stmt = mysqli_prepare($conn, $sql)){
                 
                 <!-- User Profile Section -->
                 <div class="mt-auto p-4 border-t border-gray-700">
-                    <div class="flex items-center mb-4">
+                    <div class="flex items-center mb-4 cursor-pointer hover:bg-[#363636] p-2 rounded-md transition-colors duration-200" onclick="openProfileModal()">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">
                             <?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?>
                         </div>
@@ -304,5 +304,90 @@ if($stmt = mysqli_prepare($conn, $sql)){
             </div>
         </div>
     </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold">Profile Details</h3>
+                    <button onclick="closeProfileModal()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
+                            <?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Username</label>
+                            <p class="text-base bg-[#1A1A1A] p-3 rounded-md"><?php echo htmlspecialchars($_SESSION["username"]); ?></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Account Created</label>
+                            <p class="text-base bg-[#1A1A1A] p-3 rounded-md">
+                                <?php 
+                                    $created_date = new DateTime($_SESSION["created_at"]);
+                                    echo $created_date->format('F j, Y');
+                                ?>
+                            </p>
+                        </div>
+                        <?php
+                        // Get task statistics
+                        $status_query = mysqli_query($conn, "SELECT status, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY status");
+                        $status_stats = [];
+                        while($row = mysqli_fetch_assoc($status_query)) {
+                            $status_stats[$row['status']] = $row['count'];
+                        }
+                        ?>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Tasks Statistics</label>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo array_sum($status_stats); ?></p>
+                                    <p class="text-xs text-gray-400">Total Tasks</p>
+                                </div>
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo $status_stats['completed'] ?? 0; ?></p>
+                                    <p class="text-xs text-gray-400">Completed</p>
+                                </div>
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo $status_stats['in_progress'] ?? 0; ?></p>
+                                    <p class="text-xs text-gray-400">In Progress</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add these functions before any existing JavaScript
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProfileModal();
+            }
+        });
+
+        // Existing JavaScript code...
+    </script>
 </body>
 </html> 

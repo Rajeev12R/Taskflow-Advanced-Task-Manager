@@ -25,97 +25,165 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 </head>
 <body class="h-full bg-[#1A1A1A] text-white">
     <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <div class="w-64 bg-[#2D2D2D] border-r border-gray-700">
-            <div class="p-4">
-                <h1 class="text-xl font-bold mb-8">TaskFlow</h1>
+        <!-- Sidebar with fixed height -->
+        <div class="w-64 bg-[#2D2D2D] border-r border-gray-700 h-screen fixed left-0">
+            <div class="p-4 h-full flex flex-col">
+                <h1 class="text-lg font-bold mb-6">TaskFlow</h1>
                 <nav class="space-y-2">
-                    <a href="tasks.php" class="flex items-center px-4 py-2 text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
-                        <i class="fas fa-home w-5 h-5 mr-3"></i>
+                    <a href="tasks.php" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
+                        <i class="fas fa-home w-4 h-4 mr-3"></i>
                         Dashboard
                     </a>
-                    <a href="tasks.php" class="flex items-center px-4 py-2 text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
-                        <i class="fas fa-tasks w-5 h-5 mr-3"></i>
+                    <a href="tasks.php" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
+                        <i class="fas fa-tasks w-4 h-4 mr-3"></i>
                         All Tasks
                     </a>
-                    <a href="calendar.php" class="flex items-center px-4 py-2 bg-[#1A1A1A] text-white rounded-md transition-colors duration-200">
-                        <i class="fas fa-calendar w-5 h-5 mr-3"></i>
+                    <a href="calendar.php" class="flex items-center px-4 py-2 text-sm bg-[#1A1A1A] text-white rounded-md transition-colors duration-200">
+                        <i class="fas fa-calendar w-4 h-4 mr-3"></i>
                         Calendar
                     </a>
-                    <a href="analytics.php" class="flex items-center px-4 py-2 text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
-                        <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
+                    <a href="analytics.php" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1A1A1A] rounded-md transition-colors duration-200">
+                        <i class="fas fa-chart-bar w-4 h-4 mr-3"></i>
                         Analytics
                     </a>
                 </nav>
-            </div>
-            <!-- User Profile Section -->
-            <div class="absolute bottom-0 w-64 p-4 border-t border-gray-700">
-                <div class="flex items-center mb-4">
-                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?>
+                
+                <!-- User Profile Section -->
+                <div class="mt-auto p-4 border-t border-gray-700">
+                    <div class="flex items-center mb-4 cursor-pointer hover:bg-[#363636] p-2 rounded-md transition-colors duration-200" onclick="openProfileModal()">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">
+                            <?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium"><?php echo htmlspecialchars($_SESSION["username"]); ?></p>
+                        </div>
                     </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium"><?php echo htmlspecialchars($_SESSION["username"]); ?></p>
-                    </div>
+                    <a href="logout.php" class="flex items-center text-sm text-gray-300 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-sign-out-alt w-4 h-4 mr-3"></i>
+                        Logout
+                    </a>
                 </div>
-                <a href="logout.php" class="flex items-center text-gray-300 hover:text-white transition-colors duration-200">
-                    <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                    Logout
-                </a>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
-            <div class="p-8">
-                <!-- Header -->
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <h1 class="text-2xl font-bold">Calendar View</h1>
-                        <p class="text-gray-400">View and manage your tasks in calendar format</p>
+        <!-- Main Content with fixed header and scrollable calendar -->
+        <div class="flex-1 ml-64">
+            <!-- Fixed Header -->
+            <div class="bg-[#1A1A1A] fixed top-0 right-0 left-64 z-10">
+                <div class="p-6 border-b border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-xl font-bold">Calendar View</h1>
+                            <p class="text-sm text-gray-400">Manage your tasks in calendar view</p>
+                        </div>
+                        <button onclick="openNewTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 text-sm rounded-md flex items-center transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>
+                            New Task
+                        </button>
                     </div>
-                    <button onclick="openNewTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center transition-colors duration-200">
-                        <i class="fas fa-plus mr-2"></i>
-                        New Task
+                </div>
+            </div>
+
+            <!-- Scrollable Calendar Content -->
+            <div class="mt-[88px] p-6 overflow-y-auto">
+                <div id="calendar" class="bg-[#2D2D2D] p-4 rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold" id="modalTitle">Task Details</h3>
+                    <button onclick="closeTaskModal()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
-
-                <!-- Calendar Container -->
-                <div class="bg-[#2D2D2D] rounded-lg p-6">
-                    <div id="calendar" class="fc-theme-standard"></div>
+                <div id="taskDetails" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Title</label>
+                        <p id="taskTitle" class="text-sm"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Description</label>
+                        <p id="taskDescription" class="text-sm"></p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Priority</label>
+                            <p id="taskPriority" class="text-sm"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Status</label>
+                            <p id="taskStatus" class="text-sm"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Due Date</label>
+                        <p id="taskDueDate" class="text-sm"></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Task Details Modal -->
-    <div id="taskDetailsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
-        <div class="bg-[#2D2D2D] rounded-lg shadow-xl w-full max-w-lg mx-4 z-10">
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold task-title"></h2>
-                    <button onclick="closeTaskDetailsModal()" class="text-gray-400 hover:text-white">
+                    <h3 class="text-lg font-bold">Profile Details</h3>
+                    <button onclick="closeProfileModal()" class="text-gray-400 hover:text-white">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-400">Description</h3>
-                        <p class="mt-1 task-description"></p>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
+                            <?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?>
+                        </div>
                     </div>
-                    <div class="flex space-x-4">
+                    <div class="space-y-4">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-400">Priority</h3>
-                            <p class="mt-1 task-priority"></p>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Username</label>
+                            <p class="text-base bg-[#1A1A1A] p-3 rounded-md"><?php echo htmlspecialchars($_SESSION["username"]); ?></p>
                         </div>
                         <div>
-                            <h3 class="text-sm font-medium text-gray-400">Status</h3>
-                            <p class="mt-1 task-status"></p>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Account Created</label>
+                            <p class="text-base bg-[#1A1A1A] p-3 rounded-md">
+                                <?php 
+                                    $created_date = new DateTime($_SESSION["created_at"]);
+                                    echo $created_date->format('F j, Y');
+                                ?>
+                            </p>
                         </div>
+                        <?php
+                        // Get task statistics
+                        $user_id = $_SESSION["id"];
+                        $status_query = mysqli_query($conn, "SELECT status, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY status");
+                        $status_stats = [];
+                        while($row = mysqli_fetch_assoc($status_query)) {
+                            $status_stats[$row['status']] = $row['count'];
+                        }
+                        ?>
                         <div>
-                            <h3 class="text-sm font-medium text-gray-400">Due Date</h3>
-                            <p class="mt-1 task-due-date"></p>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Tasks Statistics</label>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo array_sum($status_stats); ?></p>
+                                    <p class="text-xs text-gray-400">Total Tasks</p>
+                                </div>
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo $status_stats['completed'] ?? 0; ?></p>
+                                    <p class="text-xs text-gray-400">Completed</p>
+                                </div>
+                                <div class="bg-[#1A1A1A] p-3 rounded-md">
+                                    <p class="text-lg font-bold"><?php echo $status_stats['in_progress'] ?? 0; ?></p>
+                                    <p class="text-xs text-gray-400">In Progress</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,6 +270,26 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             modal.querySelector('.task-due-date').textContent = event.start ? event.start.toLocaleDateString() : 'No due date';
             modal.classList.remove('hidden');
         }
+
+        // Profile Modal Functions
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProfileModal();
+            }
+        });
     </script>
 
     <style>

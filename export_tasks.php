@@ -128,7 +128,7 @@ try {
     ob_clean();
     
     // Redirect back with error
-    header("Location: dashboard.php?error=export_failed");
+    header("Location: tasks.php?error=export_failed");
     exit;
 }
 
