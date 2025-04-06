@@ -22,8 +22,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskFlow - All Tasks</title>
-    <!-- Add Alpine.js before other scripts -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Chart.js for Analytics -->
@@ -97,28 +95,20 @@ if($stmt = mysqli_prepare($conn, $sql)){
                         </div>
                         <div class="flex space-x-4">
                             <!-- Export/Import Dropdown -->
-                            <div x-data="{ open: false }" class="relative">
-                                <button @click="open = !open" type="button" class="bg-[#2D2D2D] text-white px-3 py-2 text-sm rounded-md flex items-center space-x-2 hover:bg-[#363636] transition-colors duration-200">
+                            <div class="relative">
+                                <button id="exportDropdownBtn" type="button" class="bg-[#2D2D2D] text-white px-3 py-2 text-sm rounded-md flex items-center space-x-2 hover:bg-[#363636] transition-colors duration-200">
                                     <i class="fas fa-file-export"></i>
                                     <span>Export/Import</span>
-                                    <i class="fas fa-chevron-down ml-2"></i>
+                                    <i class="fas fa-chevron-down ml-2" id="dropdownArrow"></i>
                                 </button>
-                                <div x-show="open" 
-                                     @click.away="open = false" 
-                                     class="absolute right-0 mt-2 w-48 bg-[#2D2D2D] rounded-md shadow-lg z-50"
-                                     x-transition:enter="transition ease-out duration-100"
-                                     x-transition:enter-start="transform opacity-0 scale-95"
-                                     x-transition:enter-end="transform opacity-100 scale-100"
-                                     x-transition:leave="transition ease-in duration-75"
-                                     x-transition:leave-start="transform opacity-100 scale-100"
-                                     x-transition:leave-end="transform opacity-0 scale-95">
-                                    <a href="export_tasks.php?format=csv" class="block px-4 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
+                                <div id="exportDropdownMenu" class="hidden absolute right-0 text-sm mt-2 w-40 bg-[#2D2D2D] rounded-md shadow-lg z-50">
+                                    <a href="export_tasks.php?format=csv" class="block px-2 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
                                         <i class="fas fa-file-csv mr-2"></i>Export as CSV
                                     </a>
-                                    <a href="export_tasks.php?format=pdf" class="block px-4 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
+                                    <a href="export_tasks.php?format=pdf" class="block px-2 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
                                         <i class="fas fa-file-pdf mr-2"></i>Export as PDF
                                     </a>
-                                    <button onclick="openImportModal()" class="w-full text-left px-4 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
+                                    <button onclick="openImportModal()" class="w-full text-left px-2 py-2 text-white hover:bg-[#363636] transition-colors duration-200">
                                         <i class="fas fa-file-import mr-2"></i>Import Tasks
                                     </button>
                                 </div>
@@ -367,6 +357,36 @@ if($stmt = mysqli_prepare($conn, $sql)){
     </div>
 
     <script>
+        // Add this at the beginning of your script section
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownBtn = document.getElementById('exportDropdownBtn');
+            const dropdownMenu = document.getElementById('exportDropdownMenu');
+            const dropdownArrow = document.getElementById('dropdownArrow');
+            let isOpen = false;
+
+            // Toggle dropdown
+            dropdownBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                isOpen = !isOpen;
+                if (isOpen) {
+                    dropdownMenu.classList.remove('hidden');
+                    dropdownArrow.classList.add('transform', 'rotate-180');
+                } else {
+                    dropdownMenu.classList.add('hidden');
+                    dropdownArrow.classList.remove('transform', 'rotate-180');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                    dropdownArrow.classList.remove('transform', 'rotate-180');
+                    isOpen = false;
+                }
+            });
+        });
+
         // Add these functions before any existing JavaScript
         function openProfileModal() {
             const modal = document.getElementById('profileModal');
