@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Modern Task Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .macbook {
+            --webkit-perspective: 1000;
+            perspective: 1000;
+            transform-style: preserve-3d;
+        }
+
+        .screen {
+            transform: rotateX(10deg);
+            transform-origin: center bottom;
+            transition: transform 0.5s;
+        }
+
+        .macbook:hover .screen {
+            transform: rotateX(0deg);
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #3B82F6, #34D399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-pattern {
+            background-color: #1A1A1A;
+            background-image: radial-gradient(#2D2D2D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .feature-card {
+            backdrop-filter: blur(10px);
+            background: rgba(45, 45, 45, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-[#1A1A1A] text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-[#1A1A1A] bg-opacity-90 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold gradient-text">TaskFlow</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features"
+                        class="text-gray-300 hover:text-white transition-colors duration-200">Features</a>
+                    <a href="index.php"
+                        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">Get
+                        Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern min-h-screen flex items-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    Manage Tasks with
+                    <span class="gradient-text">Elegance</span>
+                </h1>
+                <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                    TaskFlow brings modern task management to your workflow. Simple, beautiful, and powerful.
+                </p>
+                <a href="index.php"
+                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-lg font-medium transition-colors duration-200">
+                    Get Started
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- MacBook Mockup -->
+            <div class="macbook max-w-5xl mx-auto">
+                <div class="screen relative">
+                    <div class="relative w-full rounded-t-xl bg-[#2D2D2D] p-4 shadow-2xl">
+                        <div class="absolute top-0 inset-x-0 h-3 bg-[#1A1A1A] rounded-t-xl"></div>
+                        <img src="mockup.png" alt="TaskFlow Dashboard" class="w-full rounded-lg shadow-lg"
+                            style="height: 480px; object-fit: cover;">
+                    </div>
+                    <div class="relative h-3 bg-[#2D2D2D]">
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-[#1A1A1A]"></div>
+                    </div>
+                    <div class="h-2 bg-[#1A1A1A] rounded-b-xl"></div>
+                </div>
+                <div class="base h-3 bg-gradient-to-b from-[#2D2D2D] to-[#1A1A1A] rounded-b-3xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-[#1A1A1A]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                <span class="gradient-text">Powerful Features</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-tasks text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Task Management</h3>
+                    <p class="text-gray-400">Create, organize, and track your tasks with an intuitive interface.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-green-500 mb-4">
+                        <i class="fas fa-calendar text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Calendar View</h3>
+                    <p class="text-gray-400">Visualize your tasks in a beautiful calendar interface.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-yellow-500 mb-4">
+                        <i class="fas fa-chart-bar text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Analytics Dashboard</h3>
+                    <p class="text-gray-400">Get insights into your productivity with detailed analytics.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-purple-500 mb-4">
+                        <i class="fas fa-file-export text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Export/Import</h3>
+                    <p class="text-gray-400">Easily export and import your tasks in CSV or PDF format.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-red-500 mb-4">
+                        <i class="fas fa-bell text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Smart Notifications</h3>
+                    <p class="text-gray-400">Stay updated with elegant toast notifications.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card p-6 rounded-xl">
+                    <div class="text-indigo-500 mb-4">
+                        <i class="fas fa-palette text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Modern UI</h3>
+                    <p class="text-gray-400">Beautiful dark theme interface with smooth animations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-b from-[#1A1A1A] to-[#2D2D2D]">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+            <p class="text-gray-400 mb-8">Join thousands of users who trust TaskFlow for their task management needs.
+            </p>
+            <a href="index.php"
+                class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-lg font-medium transition-colors duration-200">
+                Start Managing Tasks
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#2D2D2D] py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-400">&copy; 2024 TaskFlow. All rights reserved.</span>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
