@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize tooltips
+
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Form validation
+
     const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, false);
     });
 
-    // Date input validation
+
     const dateInputs = document.querySelectorAll('input[type="date"]');
     dateInputs.forEach(input => {
         input.addEventListener('change', function () {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Auto-hide alerts after 5 seconds
+
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     });
 
-    // Task status change handler
+
     const statusSelects = document.querySelectorAll('.task-status');
     statusSelects.forEach(select => {
         select.addEventListener('change', function () {
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Task Search and Filter
+
     const searchInput = document.getElementById('searchTasks');
     const statusFilter = document.getElementById('statusFilter');
     const taskCards = document.querySelectorAll('.task-card');
@@ -112,7 +112,6 @@ function getPriorityColor(priority) {
     }
 }
 
-// Toast Notification System
 const toastTypes = {
     success: { bgColor: 'bg-green-500', icon: 'fas fa-check-circle' },
     error: { bgColor: 'bg-red-500', icon: 'fas fa-exclamation-circle' },
@@ -132,10 +131,9 @@ function showToast(message, type = 'info', duration = 3000) {
 
     document.body.appendChild(toast);
 
-    // Add slide-up animation
+
     toast.style.animation = 'slideUp 0.3s ease-out';
 
-    // Remove the toast after duration
     setTimeout(() => {
         toast.style.animation = 'slideDown 0.3s ease-out';
         setTimeout(() => {
@@ -144,7 +142,6 @@ function showToast(message, type = 'info', duration = 3000) {
     }, duration);
 }
 
-// Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideUp {
@@ -161,7 +158,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Task Status Management
 function toggleTaskStatus(taskId, currentStatus) {
     const newStatus = currentStatus === 'completed' ? 'pending' : 'completed';
 
@@ -185,7 +181,6 @@ function toggleTaskStatus(taskId, currentStatus) {
         })
         .then(data => {
             if (data.success) {
-                // Update UI without page reload
                 const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
                 if (!taskCard) return;
 
@@ -220,7 +215,6 @@ function toggleTaskStatus(taskId, currentStatus) {
         });
 }
 
-// Task Filtering
 function initializeTaskFilters() {
     const searchInput = document.getElementById('searchTasks');
     const statusFilter = document.getElementById('statusFilter');
@@ -253,7 +247,6 @@ function initializeTaskFilters() {
     priorityFilter.addEventListener('change', filterTasks);
 }
 
-// Task Modal Management
 function initializeTaskModal() {
     const modal = document.getElementById('taskModal');
     const modalOverlay = document.getElementById('modalOverlay');
@@ -264,7 +257,6 @@ function initializeTaskModal() {
     window.openNewTaskModal = function () {
         modal.classList.remove('hidden');
         modalOverlay.classList.remove('hidden');
-        // Reset form if it exists
         if (form) form.reset();
     };
 
@@ -273,14 +265,12 @@ function initializeTaskModal() {
         modalOverlay.classList.add('hidden');
     };
 
-    // Close modal when clicking outside
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) {
             closeTaskModal();
         }
     });
 
-    // Form submission handling
     if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault(); // Prevent default form submission
@@ -305,7 +295,6 @@ function initializeTaskModal() {
                     if (data.success) {
                         showToast('Task created successfully', 'success');
                         closeTaskModal();
-                        // Delay reload to show the success toast
                         setTimeout(() => {
                             window.location.reload();
                         }, 1500);
@@ -321,7 +310,6 @@ function initializeTaskModal() {
     }
 }
 
-// Task Actions
 function initializeTaskActions() {
     window.editTask = function (taskId) {
         window.location.href = `edit_task.php?id=${taskId}`;
@@ -350,7 +338,6 @@ function initializeTaskActions() {
                 });
         };
 
-        // Show confirmation toast
         const confirmToast = document.createElement('div');
         confirmToast.className = 'fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex flex-col space-y-2';
         confirmToast.innerHTML = `
@@ -369,7 +356,6 @@ function initializeTaskActions() {
     };
 }
 
-// Update Task Counters
 function updateTaskCounters() {
     fetch('get_task_stats.php', {
         headers: {
@@ -407,7 +393,6 @@ function updateTaskCounters() {
         });
 }
 
-// Calendar Integration
 function initializeCalendar() {
     const calendar = document.getElementById('calendar');
     if (calendar) {
@@ -420,7 +405,6 @@ function initializeCalendar() {
             },
             events: 'get_tasks_for_calendar.php',
             eventClick: function (info) {
-                // Show task details in modal
                 const task = info.event;
                 showTaskDetails(task);
             }
@@ -429,13 +413,11 @@ function initializeCalendar() {
     }
 }
 
-// Analytics Charts
 function initializeAnalytics() {
     fetch('get_task_stats.php')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Status Distribution Chart
                 const statusCtx = document.getElementById('statusChart');
                 if (statusCtx) {
                     new Chart(statusCtx, {
@@ -465,7 +447,6 @@ function initializeAnalytics() {
                     });
                 }
 
-                // Priority Distribution Chart
                 const priorityCtx = document.getElementById('priorityChart');
                 if (priorityCtx) {
                     new Chart(priorityCtx, {
@@ -510,11 +491,9 @@ function initializeAnalytics() {
         .catch(error => console.error('Error:', error));
 }
 
-// Initialize everything when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Initializing TaskFlow...');
 
-    // Initialize all features
     initializeTaskFilters();
     initializeTaskModal();
     initializeTaskActions();
@@ -522,7 +501,6 @@ document.addEventListener('DOMContentLoaded', function () {
     updateTaskCardLayout();
     updateModalResponsiveness();
 
-    // Add data-task-id to all task cards if not already present
     document.querySelectorAll('.task-card').forEach(card => {
         if (!card.hasAttribute('data-task-id')) {
             const taskId = card.querySelector('[onclick*="toggleTaskStatus"]')
@@ -554,7 +532,6 @@ function showTaskDetails(event) {
     modal.classList.remove('hidden');
 }
 
-// Import Modal Functions
 function openImportModal() {
     const modal = document.getElementById('importModal');
     const modalOverlay = document.getElementById('modalOverlay');
@@ -570,13 +547,12 @@ function closeImportModal() {
     if (modal && modalOverlay) {
         modal.classList.add('hidden');
         modalOverlay.classList.add('hidden');
-        // Reset form
+
         const form = document.getElementById('importForm');
         if (form) form.reset();
     }
 }
 
-// Initialize Import Form
 function initializeImportForm() {
     const form = document.getElementById('importForm');
     if (!form) return;
@@ -593,12 +569,11 @@ function initializeImportForm() {
         }
 
         const file = fileInput.files[0];
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        if (file.size > 5 * 1024 * 1024) { 
             showToast('File size must be less than 5MB', 'error');
             return;
         }
 
-        // Show loading state
         const submitButton = this.querySelector('button[type="submit"]');
         const originalText = submitButton.innerHTML;
         submitButton.disabled = true;
@@ -618,7 +593,6 @@ function initializeImportForm() {
                 if (data.success) {
                     showToast(data.message, 'success');
                     closeImportModal();
-                    // Delay reload to show the success toast
                     setTimeout(() => {
                         window.location.reload();
                     }, 1500);
@@ -631,18 +605,15 @@ function initializeImportForm() {
                 showToast(error.message || 'Failed to import tasks', 'error');
             })
             .finally(() => {
-                // Reset button state
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalText;
             });
     });
 }
 
-// Add to DOM loaded initialization
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Initializing TaskFlow...');
 
-    // Initialize all features
     initializeSidebar();
     initializeTaskFilters();
     initializeTaskModal();
@@ -651,5 +622,4 @@ document.addEventListener('DOMContentLoaded', function () {
     updateTaskCardLayout();
     updateModalResponsiveness();
 
-    // ... rest of the initialization code ...
 }); 

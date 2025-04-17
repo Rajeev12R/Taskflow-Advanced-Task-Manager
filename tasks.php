@@ -24,17 +24,13 @@ if($stmt = mysqli_prepare($conn, $sql)){
     <title>TaskFlow - All Tasks</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FullCalendar for Calendar View -->
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
-    <!-- Custom JavaScript -->
     <script src="js/script.js" defer></script>
 </head>
 <body class="h-full bg-[#1A1A1A] text-white">
     <div class="min-h-screen flex">
-        <!-- Sidebar with fixed height -->
         <div class="w-64 bg-[#2D2D2D] border-r border-gray-700 h-screen fixed left-0">
             <div class="p-4 h-full flex flex-col">
                 <h1 class="text-lg font-bold mb-6">TaskFlow</h1>
@@ -57,7 +53,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
                     </a>
                 </nav>
                 
-                <!-- User Profile Section -->
                 <div class="mt-auto p-4 border-t border-gray-700">
                     <div class="flex items-center mb-4 cursor-pointer hover:bg-[#363636] p-2 rounded-md transition-colors duration-200" onclick="openProfileModal()">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">
@@ -75,26 +70,21 @@ if($stmt = mysqli_prepare($conn, $sql)){
             </div>
         </div>
 
-        <!-- Main Content with fixed header and scrollable task list -->
         <div class="flex-1 ml-64">
-            <!-- Fixed Header -->
             <div class="bg-[#1A1A1A] fixed top-0 right-0 left-64 z-10">
                 <div class="p-6 border-b border-gray-700">
-                    <!-- Error Messages -->
                     <?php if(isset($_GET['error']) && $_GET['error'] === 'export_failed'): ?>
                     <div class="mb-4 bg-red-500 bg-opacity-20 text-red-500 px-4 py-2 rounded-md text-sm">
                         <p>Failed to export tasks. Please try again.</p>
                     </div>
                     <?php endif; ?>
                     
-                    <!-- Header Content -->
                     <div class="flex justify-between items-center">
                         <div>
                             <h1 class="text-xl font-bold">All Tasks</h1>
                             <p class="text-sm text-gray-400">Manage and organize your tasks</p>
                         </div>
                         <div class="flex space-x-4">
-                            <!-- Export/Import Dropdown -->
                             <div class="relative">
                                 <button id="exportDropdownBtn" type="button" class="bg-[#2D2D2D] text-white px-3 py-2 text-sm rounded-md flex items-center space-x-2 hover:bg-[#363636] transition-colors duration-200">
                                     <i class="fas fa-file-export"></i>
@@ -139,7 +129,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
                 </div>
             </div>
 
-            <!-- Scrollable Task List -->
             <div class="mt-[120px] p-6 overflow-y-auto">
                 <div class="space-y-4">
                     <?php while($task = mysqli_fetch_assoc($result)): 
@@ -201,7 +190,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
         </div>
     </div>
 
-    <!-- Task Modal -->
     <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
     <div id="taskModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
         <div class="bg-[#2D2D2D] rounded-lg shadow-xl w-full max-w-2xl mx-4">
@@ -259,7 +247,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
         </div>
     </div>
 
-    <!-- Import Modal -->
     <div id="importModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-gray-800 rounded-lg w-full max-w-md mx-4">
@@ -295,7 +282,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
         </div>
     </div>
 
-    <!-- Profile Modal -->
     <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
             <div class="p-6">
@@ -326,7 +312,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
                             </p>
                         </div>
                         <?php
-                        // Get task statistics
                         $status_query = mysqli_query($conn, "SELECT status, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY status");
                         $status_stats = [];
                         while($row = mysqli_fetch_assoc($status_query)) {
@@ -357,14 +342,12 @@ if($stmt = mysqli_prepare($conn, $sql)){
     </div>
 
     <script>
-        // Add this at the beginning of your script section
         document.addEventListener('DOMContentLoaded', function() {
             const dropdownBtn = document.getElementById('exportDropdownBtn');
             const dropdownMenu = document.getElementById('exportDropdownMenu');
             const dropdownArrow = document.getElementById('dropdownArrow');
             let isOpen = false;
 
-            // Toggle dropdown
             dropdownBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 isOpen = !isOpen;
@@ -377,7 +360,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
                 }
             });
 
-            // Close dropdown when clicking outside
             document.addEventListener('click', function(e) {
                 if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.classList.add('hidden');
@@ -387,7 +369,6 @@ if($stmt = mysqli_prepare($conn, $sql)){
             });
         });
 
-        // Add these functions before any existing JavaScript
         function openProfileModal() {
             const modal = document.getElementById('profileModal');
             modal.classList.remove('hidden');
@@ -400,14 +381,12 @@ if($stmt = mysqli_prepare($conn, $sql)){
             modal.classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('profileModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeProfileModal();
             }
         });
 
-        // Existing JavaScript code...
     </script>
 </body>
 </html> 

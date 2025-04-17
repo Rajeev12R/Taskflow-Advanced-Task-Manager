@@ -28,19 +28,16 @@ try {
         throw new Exception('Only CSV files are allowed');
     }
 
-    // Open the uploaded file
     $handle = fopen($file['tmp_name'], 'r');
     if ($handle === false) {
         throw new Exception('Failed to open file');
     }
 
-    // Read the header row
     $headers = fgetcsv($handle);
     if ($headers === false) {
         throw new Exception('Failed to read CSV headers');
     }
 
-    // Expected headers
     $expectedHeaders = ['Title', 'Description', 'Priority', 'Status', 'Due Date'];
     $headerValid = true;
     foreach ($expectedHeaders as $header) {
@@ -54,7 +51,6 @@ try {
         throw new Exception('Invalid CSV format. Please use the correct template.');
     }
 
-    // Prepare insert statement
     $sql = "INSERT INTO tasks (user_id, title, description, priority, status, due_date) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -62,14 +58,12 @@ try {
         throw new Exception('Failed to prepare database statement');
     }
 
-    // Start transaction
     mysqli_begin_transaction($conn);
 
     $user_id = $_SESSION['id'];
     $imported = 0;
     $failed = 0;
 
-    // Read and import each row
     while (($row = fgetcsv($handle)) !== false) {
         try {
             $title = trim($row[0]);
@@ -78,7 +72,6 @@ try {
             $status = strtolower(trim($row[3]));
             $due_date = !empty($row[4]) ? date('Y-m-d', strtotime($row[4])) : null;
 
-            // Validate data
             if (empty($title)) {
                 throw new Exception('Title is required');
             }
@@ -104,7 +97,6 @@ try {
         }
     }
 
-    // Commit transaction
     mysqli_commit($conn);
 
     fclose($handle);

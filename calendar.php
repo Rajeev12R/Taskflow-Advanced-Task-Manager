@@ -16,16 +16,12 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     <title>TaskFlow - Calendar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    <!-- FullCalendar Scripts -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-    <!-- Custom JavaScript -->
     <script src="js/script.js" defer></script>
 </head>
 <body class="h-full bg-[#1A1A1A] text-white">
     <div class="min-h-screen flex">
-        <!-- Sidebar with fixed height -->
         <div class="w-64 bg-[#2D2D2D] border-r border-gray-700 h-screen fixed left-0">
             <div class="p-4 h-full flex flex-col">
                 <h1 class="text-lg font-bold mb-6">TaskFlow</h1>
@@ -48,7 +44,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     </a>
                 </nav>
                 
-                <!-- User Profile Section -->
                 <div class="mt-auto p-4 border-t border-gray-700">
                     <div class="flex items-center mb-4 cursor-pointer hover:bg-[#363636] p-2 rounded-md transition-colors duration-200" onclick="openProfileModal()">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">
@@ -66,9 +61,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             </div>
         </div>
 
-        <!-- Main Content with fixed header and scrollable calendar -->
         <div class="flex-1 ml-64">
-            <!-- Fixed Header -->
             <div class="bg-[#1A1A1A] fixed top-0 right-0 left-64 z-10">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex justify-between items-center">
@@ -84,14 +77,12 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 </div>
             </div>
 
-            <!-- Scrollable Calendar Content -->
             <div class="mt-[88px] p-6 overflow-y-auto">
                 <div id="calendar" class="bg-[#2D2D2D] p-4 rounded-lg"></div>
             </div>
         </div>
     </div>
 
-    <!-- Task Modal -->
     <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
             <div class="p-4">
@@ -129,7 +120,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         </div>
     </div>
 
-    <!-- Profile Modal -->
     <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
             <div class="p-6">
@@ -160,7 +150,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                             </p>
                         </div>
                         <?php
-                        // Get task statistics
                         $user_id = $_SESSION["id"];
                         $status_query = mysqli_query($conn, "SELECT status, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY status");
                         $status_stats = [];
@@ -216,7 +205,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     showTaskDetails(info.event);
                 },
                 eventDidMount: function(info) {
-                    // Add priority-based colors
                     const priorityColors = {
                         'high': '#EF4444',
                         'medium': '#F59E0B',
@@ -251,7 +239,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             });
             calendar.render();
 
-            // Custom styling for calendar
             document.querySelectorAll('.fc-button').forEach(button => {
                 button.classList.add('bg-[#1A1A1A]', 'text-white', 'border-gray-700', 'hover:bg-[#363636]');
             });
@@ -271,7 +258,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             modal.classList.remove('hidden');
         }
 
-        // Profile Modal Functions
         function openProfileModal() {
             const modal = document.getElementById('profileModal');
             modal.classList.remove('hidden');
@@ -284,7 +270,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             modal.classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('profileModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeProfileModal();
@@ -293,7 +278,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     </script>
 
     <style>
-        /* Calendar customization */
         .fc {
             background: #2D2D2D;
             border-radius: 0.5rem;

@@ -6,7 +6,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $username = trim($_POST["username"]);
     $password = trim($_POST["password"]);
     
-    // Validate credentials
     if(empty($username)){
         $login_err = "Please enter username.";
     } elseif(empty($password)){
@@ -25,16 +24,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $created_at);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
-                            // Password is correct, start a new session
                             session_start();
                             
-                            // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
                             $_SESSION["created_at"] = $created_at;
                             
-                            // Redirect user to tasks page
                             header("location: tasks.php");
                             exit;
                         } else{
@@ -55,7 +51,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     mysqli_close($conn);
 }
 
-// Check if there's any error message to display
 if(!empty($login_err)){
     echo "<script>alert('" . htmlspecialchars($login_err) . "');</script>";
     echo "<script>window.location.href = 'index.php';</script>";

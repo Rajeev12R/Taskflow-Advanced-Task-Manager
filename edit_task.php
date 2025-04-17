@@ -14,7 +14,6 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
     $task_id = $_GET["id"];
     $user_id = $_SESSION["id"];
     
-    // Verify task belongs to user and get current values
     $sql = "SELECT * FROM tasks WHERE id = ? AND user_id = ?";
     if($stmt = mysqli_prepare($conn, $sql)){
         mysqli_stmt_bind_param($stmt, "ii", $task_id, $user_id);
@@ -37,40 +36,34 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $task_id = $_POST["id"];
     
-    // Validate title
     if(empty(trim($_POST["title"]))){
         $title_err = "Please enter a title.";
     } else {
         $title = trim($_POST["title"]);
     }
     
-    // Validate description
     if(empty(trim($_POST["description"]))){
         $description_err = "Please enter a description.";
     } else {
         $description = trim($_POST["description"]);
     }
     
-    // Validate priority
     if(empty(trim($_POST["priority"]))){
         $priority_err = "Please select a priority.";
     } else {
         $priority = trim($_POST["priority"]);
     }
     
-    // Validate status
     if(empty(trim($_POST["status"]))){
         $status_err = "Please select a status.";
     } else {
         $status = trim($_POST["status"]);
     }
     
-    // Validate due date
     if(!empty(trim($_POST["due_date"]))){
         $due_date = trim($_POST["due_date"]);
     }
     
-    // Check input errors before updating
     if(empty($title_err) && empty($description_err) && empty($priority_err) && empty($status_err)){
         $sql = "UPDATE tasks SET title=?, description=?, priority=?, status=?, due_date=? WHERE id=? AND user_id=?";
         
@@ -97,7 +90,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 </head>
 <body class="h-full bg-[#1A1A1A] text-white">
     <div class="min-h-screen flex">
-        <!-- Sidebar -->
         <div class="w-64 bg-[#2D2D2D] border-r border-gray-700">
             <div class="p-4">
                 <h1 class="text-xl font-bold mb-8">TaskFlow</h1>
@@ -120,7 +112,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     </a>
                 </nav>
             </div>
-            <!-- User Profile Section -->
             <div class="absolute bottom-0 w-64 p-4 border-t border-gray-700">
                 <div class="flex items-center mb-4">
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -137,7 +128,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="flex-1 overflow-auto">
             <div class="p-8">
                 <div class="max-w-2xl mx-auto">

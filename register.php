@@ -6,7 +6,6 @@ $username = $password = $confirm_password = $email = "";
 $username_err = $password_err = $confirm_password_err = $email_err = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    // Validate username
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
     } else{
@@ -32,7 +31,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-    // Validate email
     if(empty(trim($_POST["email"]))){
         $email_err = "Please enter an email.";
     } elseif(!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
@@ -60,7 +58,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-    // Validate password
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter a password.";     
     } elseif(strlen(trim($_POST["password"])) < 6){
@@ -69,7 +66,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $password = trim($_POST["password"]);
     }
     
-    // Validate confirm password
     if(empty(trim($_POST["confirm_password"]))){
         $confirm_password_err = "Please confirm password.";     
     } else{
@@ -79,7 +75,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-    // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($email_err)){
         
         $sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
@@ -92,7 +87,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_email = $email;
             
             if(mysqli_stmt_execute($stmt)){
-                // Registration successful
                 $_SESSION["registration_success"] = true;
                 header("location: index.php");
                 exit;
@@ -104,7 +98,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             mysqli_stmt_close($stmt);
         }
     } else {
-        // Combine all error messages
         $error_messages = array_filter([$username_err, $email_err, $password_err, $confirm_password_err]);
         if (!empty($error_messages)) {
             echo "<script>alert('" . htmlspecialchars(implode("\\n", $error_messages)) . "');</script>";

@@ -7,28 +7,23 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
-// Get task statistics
 $user_id = $_SESSION["id"];
 
-// Get task counts by status
 $status_query = mysqli_query($conn, "SELECT status, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY status");
 $status_stats = [];
 while($row = mysqli_fetch_assoc($status_query)) {
     $status_stats[$row['status']] = $row['count'];
 }
 
-// Get task counts by priority
 $priority_query = mysqli_query($conn, "SELECT priority, COUNT(*) as count FROM tasks WHERE user_id = $user_id GROUP BY priority");
 $priority_stats = [];
 while($row = mysqli_fetch_assoc($priority_query)) {
     $priority_stats[$row['priority']] = $row['count'];
 }
 
-// Get tasks completed this week
 $week_completed = mysqli_query($conn, "SELECT COUNT(*) as count FROM tasks WHERE user_id = $user_id AND status = 'completed' AND updated_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK)");
 $completed_this_week = mysqli_fetch_assoc($week_completed)['count'];
 
-// Get overdue tasks
 $overdue_tasks = mysqli_query($conn, "SELECT COUNT(*) as count FROM tasks WHERE user_id = $user_id AND status != 'completed' AND due_date < CURDATE()");
 $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
 ?>
@@ -45,7 +40,6 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
 </head>
 <body class="h-full bg-[#1A1A1A] text-white">
     <div class="min-h-screen flex">
-        <!-- Sidebar with fixed height -->
         <div class="w-64 bg-[#2D2D2D] border-r border-gray-700 h-screen fixed left-0">
             <div class="p-4 h-full flex flex-col">
                 <h1 class="text-lg font-bold mb-6">TaskFlow</h1>
@@ -68,7 +62,6 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
                     </a>
                 </nav>
                 
-                <!-- User Profile Section -->
                 <div class="mt-auto p-4 border-t border-gray-700">
                     <div class="flex items-center mb-4 cursor-pointer hover:bg-[#363636] p-2 rounded-md transition-colors duration-200" onclick="openProfileModal()">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">
@@ -86,9 +79,7 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
             </div>
         </div>
 
-        <!-- Main Content with fixed header and scrollable content -->
         <div class="flex-1 ml-64">
-            <!-- Fixed Header -->
             <div class="bg-[#1A1A1A] fixed top-0 right-0 left-64 z-10">
                 <div class="p-6 border-b border-gray-700">
                     <h1 class="text-xl font-bold">Analytics Dashboard</h1>
@@ -96,9 +87,7 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
                 </div>
             </div>
 
-            <!-- Scrollable Content -->
             <div class="mt-[88px] p-6 overflow-y-auto">
-                <!-- Quick Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-[#2D2D2D] p-4 rounded-lg">
                         <div class="flex items-center">
@@ -146,15 +135,12 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
                     </div>
                 </div>
 
-                <!-- Charts -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Task Status Distribution -->
                     <div class="bg-[#2D2D2D] p-4 rounded-lg">
                         <h2 class="text-base font-bold mb-4">Task Status Distribution</h2>
                         <canvas id="statusChart" class="w-full"></canvas>
                     </div>
 
-                    <!-- Task Priority Distribution -->
                     <div class="bg-[#2D2D2D] p-4 rounded-lg">
                         <h2 class="text-base font-bold mb-4">Task Priority Distribution</h2>
                         <canvas id="priorityChart" class="w-full"></canvas>
@@ -164,7 +150,6 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
         </div>
     </div>
 
-    <!-- Profile Modal -->
     <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-[#2D2D2D] rounded-lg w-full max-w-md mx-4">
             <div class="p-6">
@@ -218,7 +203,6 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
     </div>
 
     <script>
-        // Add these functions before the existing chart initialization code
         function openProfileModal() {
             const modal = document.getElementById('profileModal');
             modal.classList.remove('hidden');
@@ -231,16 +215,13 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
             modal.classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('profileModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeProfileModal();
             }
         });
 
-        // Initialize charts
         document.addEventListener('DOMContentLoaded', function() {
-            // Status Chart
             new Chart(document.getElementById('statusChart'), {
                 type: 'doughnut',
                 data: {
@@ -267,7 +248,6 @@ $overdue_count = mysqli_fetch_assoc($overdue_tasks)['count'];
                 }
             });
 
-            // Priority Chart
             new Chart(document.getElementById('priorityChart'), {
                 type: 'bar',
                 data: {

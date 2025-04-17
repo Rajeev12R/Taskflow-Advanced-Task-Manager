@@ -11,7 +11,6 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
     $task_id = $_GET["id"];
     $user_id = $_SESSION["id"];
     
-    // First verify that the task belongs to the user
     $check_sql = "SELECT user_id FROM tasks WHERE id = ?";
     if($stmt = mysqli_prepare($conn, $check_sql)){
         mysqli_stmt_bind_param($stmt, "i", $task_id);
@@ -20,7 +19,6 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
         $task = mysqli_fetch_assoc($result);
         
         if($task && $task['user_id'] == $user_id){
-            // Task belongs to user, proceed with deletion
             $delete_sql = "DELETE FROM tasks WHERE id = ?";
             if($delete_stmt = mysqli_prepare($conn, $delete_sql)){
                 mysqli_stmt_bind_param($delete_stmt, "i", $task_id);

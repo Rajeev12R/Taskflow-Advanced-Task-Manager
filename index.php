@@ -2,13 +2,11 @@
 session_start();
 require_once "config.php";
 
-// Check if user is already logged in
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: tasks.php");
     exit;
 }
 
-// Check for registration success message
 if(isset($_SESSION["registration_success"])) {
     echo "<script>alert('Registration successful! Please login.');</script>";
     unset($_SESSION["registration_success"]);
@@ -51,7 +49,6 @@ if(isset($_SESSION["registration_success"])) {
                     </button>
                 </div>
 
-                <!-- Login Form -->
                 <div id="loginForm" class="form-fade-in">
                     <form action="login.php" method="post" class="space-y-6">
                         <div>
@@ -85,7 +82,6 @@ if(isset($_SESSION["registration_success"])) {
                     </form>
                 </div>
 
-                <!-- Register Form -->
                 <div id="registerForm" class="hidden form-fade-in">
                     <form action="register.php" method="post" class="space-y-6">
                         <div>
